@@ -14,6 +14,7 @@ const hashPassword = db.hashPassword;
 const checkPassword = db.checkPassword;
 const userLogin = db.userLogin;
 const userProfile = db.userProfile;
+const getSignersByCity = db.getSignersByCity;
 
 const checkForSigID = function(req, res, next) {
     if (req.session.sigID) {
@@ -134,6 +135,17 @@ app.get("/signers", checkForSigID, function(req, res) {
     getSigners().then(function(signers) {
         res.render("signers", {
             layout: "main",
+            signers
+        });
+    });
+});
+
+app.get('/petition/signers/:city', function(req, res) {
+    getSignersByCity(req.params.city).then(function(signers) {
+        console.log("labeled", signers);
+        res.render("signers", {
+            layout: "main",
+            hideCity: true,
             signers
         });
     });

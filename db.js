@@ -120,6 +120,22 @@ function getSigners() {
     });
 }
 
+function getSignersByCity(city) {
+    return new Promise(function(resolve, reject) {
+        const q = `SELECT users.first, users.last, user_profiles.age, user_profiles.url
+        FROM users
+        JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        WHERE city = $1`;
+        const params = [city];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
 module.exports = {
     userRegistration,
     userLogin,
@@ -129,5 +145,6 @@ module.exports = {
     signPetition,
     getSigURL,
     getSigCount,
-    getSigners
+    getSigners,
+    getSignersByCity
 };
