@@ -5,7 +5,7 @@ const context = document.getElementById("canvas").getContext("2d");
 let offsetX;
 let offsetY;
 
-context.strokeStyle = "black";
+context.strokeStyle = "cyan";
 context.lineWidth = 3;
 
 canvas.mousedown(function(e) {
