@@ -6,6 +6,9 @@ var {
 } = require("./secrets");
 
 var db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/signatures`);
+// var db = spicedPg(process.env.DATABASE_URL || `postgres:${dbUser}:${dbPass}@localhost:5432/signatures`);
+
+// var dbUrl = process.env.DATABASE_URL || 'postgres://spicedling:password@localhost:5432/petition';
 
 function userRegistration(first, last, email, hash) {
     return new Promise(function(resolve, reject) {
@@ -136,6 +139,98 @@ function getSignersByCity(city) {
     });
 }
 
+function populateProfile(id) {
+    return new Promise(function(resolve, reject) {
+        const q = `SELECT users.first, users.last, users.email, user_profiles.age, user_profiles.url
+        FROM users
+        JOIN user_profiles
+        ON users.id = user_profiles.user_id
+        WHERE users.id = $1`;
+        const params = [id];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function updateWithoutPasswordProfile(first, last, email, id) {
+    return new Promise(function(resolve, reject) {
+        const q = `UPDATE users SET first=$1, last=$2, email=$3 WHERE id=$4`;
+        const params = [first, last, email, id];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function updateWithPasswordProfile(hash, id) {
+    return new Promise(function(resolve, reject) {
+        const q = `UPDATE users SET hash = $1 WHERE id=$2`;
+        const params = [hash, id];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function insertProfile(userID, age, city, url) {
+    return new Promise(function(resolve, reject) {
+        const q = `INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4) RETURNING id`;
+        const params = [userID || null, age || null, city || null, url || null];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function checkForRowInUserProfile(userID) {
+    return new Promise(function(resolve, reject) {
+        const q = `SELECT * FROM user_profiles WHERE user_id = $1`;
+        const params = [userID];
+        db.query(q, params).then(function(results) {
+            if (results.rows.length > 0) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function updateUserProfile(age, city, url, userID) {
+    return new Promise(function(resolve, reject) {
+        const q = `UPDATE user_profiles SET age=$1, city=$2, url=$3 WHERE user_id=$4`;
+        const params = [age, city, url, userID];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
+function selectFromUsersTable(userID) {
+    return new Promise(function(resolve, reject) {
+        const q = `SELECT first, last, email FROM users WHERE id = $1`;
+        const params = [userID];
+        db.query(q, params).then(function(results) {
+            resolve(results.rows[0]);
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
 module.exports = {
     userRegistration,
     userLogin,
@@ -146,5 +241,12 @@ module.exports = {
     getSigURL,
     getSigCount,
     getSigners,
-    getSignersByCity
+    getSignersByCity,
+    populateProfile,
+    updateWithoutPasswordProfile,
+    updateWithPasswordProfile,
+    insertProfile,
+    updateUserProfile,
+    checkForRowInUserProfile,
+    selectFromUsersTable
 };

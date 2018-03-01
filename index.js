@@ -15,9 +15,16 @@ const checkPassword = db.checkPassword;
 const userLogin = db.userLogin;
 const userProfile = db.userProfile;
 const getSignersByCity = db.getSignersByCity;
+const populateProfile = db.populateProfile;
+const updateWithoutPasswordProfile = db.updateWithoutPasswordProfile;
+const updateWithPasswordProfile = db.updateWithPasswordProfile;
+const insertProfile = db.insertProfile;
+const updateUserProfile = db.updateUserProfile;
+const checkForRowInUserProfile = db.checkForRowInUserProfile;
+const selectFromUsersTable = db.selectFromUsersTable;
 
 const checkForSigID = function(req, res, next) {
-    if (req.session.sigID) {
+    if (req.session.user.sigID) {
         next();
     } else {
         res.redirect("/petition");
@@ -63,7 +70,7 @@ app.get("/profile", function(req, res) {
 });
 
 app.post("/profile", function(req, res) {
-    userProfile(req.body.age, req.body.city, req.body.url, req.session.user.id).then(function(results) {
+    userProfile(req.body.age, req.body.city, req.body.url, req.session.user.id).then(function() {
         res.redirect('/petition');
     });
 });
@@ -94,7 +101,7 @@ app.post('/login', function(req, res) {
 });
 
 app.get("/petition", function(req, res) {
-    if (req.session.sigID) {
+    if (req.session.user.sigID) {
         res.redirect("/thankyou");
     } else {
         res.render("petition", {layout: "signthepetition"});
@@ -110,9 +117,7 @@ app.post("/petition", function(req, res) {
     } else {
         signPetition(req.body.signature).then(function(results) {
             const sigID = results.rows[0].id;
-            req.session = {
-                sigID
-            };
+            req.session.user.sigID = sigID;
             res.redirect("/thankyou");
         });
     }
@@ -120,7 +125,7 @@ app.post("/petition", function(req, res) {
 
 app.get("/thankyou", checkForSigID, function(req, res) {
     Promise.all([
-        getSigURL(req.session.sigID),
+        getSigURL(req.session.user.sigID),
         getSigCount()
     ]).then(function(results) {
         res.render("thankyou", {
@@ -142,7 +147,6 @@ app.get("/signers", checkForSigID, function(req, res) {
 
 app.get('/petition/signers/:city', function(req, res) {
     getSignersByCity(req.params.city).then(function(signers) {
-        console.log("labeled", signers);
         res.render("signers", {
             layout: "main",
             hideCity: true,
@@ -151,4 +155,68 @@ app.get('/petition/signers/:city', function(req, res) {
     });
 });
 
+app.get('/edit', function(req, res) {
+    checkForRowInUserProfile(req.session.user.id).then(function(rowExists) {
+        if (rowExists) {
+            populateProfile(req.session.user.id).then(function(results) {
+                res.render("edit", {
+                    layout: "main",
+                    first: results.first,
+                    last: results.last,
+                    email: results.email,
+                    age: results.age,
+                    city: results.city,
+                    url: results.url
+                });
+            });
+        } else {
+            selectFromUsersTable(req.session.user.id).then(function(results) {
+                res.render('edit', {
+                    layout: 'main',
+                    first: results.first,
+                    last: results.last,
+                    email: results.email
+                });
+            });
+        }
+    });
+});
+
+app.post("/edit", function(req, res) {
+    const {
+        first,
+        last,
+        email,
+        age,
+        city,
+        homepage,
+        password
+    } = req.body;
+
+    if (password) {
+        hashPassword(password).then(function(hashedPassword) {
+            updateWithPasswordProfile(hashedPassword, req.session.user.id).then(function() {
+                res.redirect('/petition');
+            });
+        });
+    } else {
+        updateWithoutPasswordProfile(first, last, email, req.session.user.id).then(function() {
+            console.log("LOG #1");
+            checkForRowInUserProfile(req.session.user.id).then(function(rowExists) {
+                console.log("LOG #2");
+                if (rowExists) {
+                    updateUserProfile(age, city, homepage, req.session.user.id).then(function() {
+                        res.redirect('/petition');
+                    });
+                } else {
+                    insertProfile(req.session.user.id, age, city, homepage).then(function() {
+                        res.redirect("/petition");
+                    });
+                }
+            });
+        });
+    }
+});
+
 app.listen(8080, () => console.log("Listening"));
+// app.listen(process.env.port || 8080, () => console.log("Listening"));
