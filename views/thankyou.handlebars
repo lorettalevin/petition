@@ -3,3 +3,25 @@
 <a href="/signers">See all {{count}} signers</a>
 
 <img id="signature-image" src="{{signature}}">
+<br>
+<a href="/edit">Click here to edit your profile!</a>
+<br>
+<form class="delete" action="/delete" method="post">
+    <button>Click here to delete your signature</button>
+</form>
+
+<!-- thank you page: 3 links
+see sginers
+edit profile
+delete sig
+
+inside of a form,
+src - sigID
+action - post
+
+make a app.post delete route
+redirect to petition
+
+delete sig function
+    DELETE FROM signatures
+    user-id (escape) -->

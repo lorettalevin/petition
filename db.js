@@ -231,6 +231,18 @@ function selectFromUsersTable(userID) {
     });
 }
 
+function deleteSigID(sigID) {
+    return new Promise(function(resolve, reject) {
+        const q = `DELETE FROM signatures WHERE id = $1`;
+        const params = [sigID];
+        db.query(q, params).then(function() {
+            resolve();
+        }).catch(function(err) {
+            reject(err);
+        });
+    });
+}
+
 module.exports = {
     userRegistration,
     userLogin,
@@ -248,5 +260,6 @@ module.exports = {
     insertProfile,
     updateUserProfile,
     checkForRowInUserProfile,
-    selectFromUsersTable
+    selectFromUsersTable,
+    deleteSigID
 };

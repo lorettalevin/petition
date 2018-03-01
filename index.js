@@ -22,6 +22,7 @@ const insertProfile = db.insertProfile;
 const updateUserProfile = db.updateUserProfile;
 const checkForRowInUserProfile = db.checkForRowInUserProfile;
 const selectFromUsersTable = db.selectFromUsersTable;
+const deleteSigID = db.deleteSigID;
 
 const checkForSigID = function(req, res, next) {
     if (req.session.user.sigID) {
@@ -70,7 +71,7 @@ app.get("/profile", function(req, res) {
 });
 
 app.post("/profile", function(req, res) {
-    userProfile(req.body.age, req.body.city, req.body.url, req.session.user.id).then(function() {
+    userProfile(req.body.age, req.body.city, req.body.url, req.session.user.id).then(function(results) {
         res.redirect('/petition');
     });
 });
@@ -216,6 +217,13 @@ app.post("/edit", function(req, res) {
             });
         });
     }
+});
+
+app.post("/delete", function(req, res) {
+    deleteSigID(req.session.user.sigID).then(function() {
+        req.session.user.sigID = null;
+        res.redirect("/petition");
+    });
 });
 
 app.listen(8080, () => console.log("Listening"));
