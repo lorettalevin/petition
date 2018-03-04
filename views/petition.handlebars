@@ -1,15 +1,23 @@
-<form class="petition-container" action="/petition" method="post">
+<div class="petition-container">
+
+<h1>SIGN THE PETITION TO END CLICK BAIT!</h1>
+
+<div id="canvas-wrapper">
+    <canvas id="canvas" width="400" height="200"></canvas>
+</div>
+
+<form action="/petition" method="post">
     <input id="hidden" type="hidden" name="signature">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button class="submit">SUBMIT</button>
+    <button class="button">SUBMIT</button>
 </form>
-
-<div class="logout-container">
-    <a href="/logout">Click here to logout</a>
-</div>
 
 <div class="error">
     {{error}}
 </div>
 
-<canvas id="canvas" width="400" height="200"></canvas>
+<div class="logout-container">
+    <a href="/logout">Click here to logout</a>
+</div>
+
+</div>

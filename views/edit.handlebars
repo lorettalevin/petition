@@ -1,4 +1,6 @@
+
 <form class="edit-container" action="/edit" method="post">
+    <h1>Update your profile! (Optional)</h1>
     <input type="text" name="first" value="{{first}}" placeholder="First Name">
     <input type="text" name="last" value="{{last}}" placeholder="Last Name">
     <input type="text" name="email" value="{{email}}" placeholder="Email">
@@ -7,9 +9,10 @@
     <input type="text" name="homepage" value="{{url}}" placeholder="Homepage">
     <input type="password" name="password" placeholder="New Password">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button class="button" name="button">UPDATE</button>
+    <div>
+        <button class="button" name="button">UPDATE</button>
+    </div>
+    <div class="logout-container">
+        <a href="/logout">Click here to logout</a>
+    </div>
 </form>
-
-<div class="logout-container">
-    <a href="/logout">Click here to logout</a>
-</div>

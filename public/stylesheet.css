@@ -9,18 +9,23 @@ body {
     margin: 0;
 }
 
-p {
-    font-size: 20px;
-    color: rgb(67, 223, 167)
-}
-
 a {
     color: blue;
     font-size: 20px;
     margin-left: 0px;
 }
 
-h2 {
+a:hover {
+    background-color: white;
+}
+
+p {
+    color: rgb(2, 246, 218);
+    font-family: courier;
+    font-size: 20px;
+}
+
+h1, h2 {
     color: rgb(2, 246, 218);
     font-family: courier;
     display: flex;
@@ -34,49 +39,52 @@ input {
     font-size: 20px;
 }
 
+.error {
+    color: red;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
 .button {
     height: 35px;
     border-radius: 5px;
     background-color: #535c68;
     font-size: 20px;
     color: lightgray;
+    transition: background-color 0.15s linear;
 }
-.continue-button {
-    height: 35px;
-    width: 125px;
-    border-radius: 5px;
-    background-color: #535c68;
-    font-size: 20px;
-    color: lightgray;
-    margin-top: 10px;
+
+.button:hover {
+    background-color: #17c0eb;
 }
 
 #canvas {
-    background-color: rgb(69, 52, 150);
-    margin-top: 10px;
+    background-color: #4437f5;
 }
 
 #signature-image {
-    border: dotted 3px cyan;
-    background-color: rgb(69, 52, 150);
-    display: inline-block;
+    background-color: #4437f5;
     width: 400px;
-    height: 200px;
+    height: 150px;
+    margin-bottom: 20px;
 }
 
 #profile-icon {
     margin-bottom: 10px;
-
 }
 
 .clickbait-cartoon {
-    display: flex;
-    justify-content: flex-end;
+    position: absolute;
+    left: 52%;
+    bottom: 43.5%;
 }
 
 .clickbait-image {
-    height: 400px;
-    width: 100%;
+    height: 300px;
+    width: 55%;
+    display: flex;
+    justify-content: center;
     background: blue url(http://s.marketwatch.com/public/resources/MWimages/MW-FC107_fake_ZG_20161215132556.jpg) no-repeat;
      background-size: 100% 100%;
 }
@@ -94,7 +102,8 @@ input {
 .profile-section {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
+    align-items: center;
 }
 
 .login-container {
@@ -104,34 +113,58 @@ input {
 
 .logout-container {
     padding-top: 10px;
+    margin-left: 10px;
 }
 
+.thankyou-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
 
+.petition-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.signers-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    color: rgb(2, 246, 218);
+    font-family: courier;
+}
 
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10%;
+}
+.edit-container input {
+    margin-bottom: 10px;
+}
+.profile-container input {
+    margin-bottom: 10px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.each-signer {
+    color: rgb(2, 246, 218);
+    margin-bottom: 20px;
+    padding: 10px;
+}
 
 nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #2217bc;
 }
 
 nav li {
@@ -146,7 +179,6 @@ nav li a {
     text-decoration: none;
 }
 
-/* Change the link color to #111 (black) on hover */
 nav li a:hover {
-    background-color: #111;
+    background-color: #a29bfe;
 }

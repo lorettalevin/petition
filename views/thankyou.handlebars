@@ -1,17 +1,19 @@
-<h2>Thanks for signing!</h2>
+<div class="thankyou-container">
+
+<h1>Thanks for signing!</h1>
 
 <img id="signature-image" src="{{signature}}">
 
-<div class="links-container">
-    <a href="/signers">See all {{count}} signers</a>
-    <a href="/edit">Click here to edit your profile!</a>
-</div>
+<button class="button"> <a href="/signers">SEE ALL ({{count}}) SIGNERS</a></button>
+<button class="button"> <a href="/edit">EDIT PROFILE</a></button>
 
 <form class="delete-container" action="/delete" method="post">
     <input type="hidden" name="_csrf" value="{{csrfToken}}">
-    <button class="button">Click here to delete your signature</button>
+    <button class="button">DELETE SIGNATURE</button>
 </form>
 
 <div class="logout-container">
     <a href="/logout">Click here to logout</a>
+</div>
+
 </div>

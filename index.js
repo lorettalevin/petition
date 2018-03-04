@@ -9,7 +9,7 @@ const csurf = require('csurf');
 
 
 const checkForSigID = function(req, res, next) {
-    if (req.session.user.sigID) {
+    if (req.session.user && req.session.user.sigID) {
         next();
     } else {
         res.redirect("/petition");
@@ -61,15 +61,13 @@ app.post("/registration", function(req, res) {
     if (!req.body.first || !req.body.last || !req.body.email || !req.body.password) {
         res.render("registration", {
             layout: "loggedoutmain",
-            error: "Please fill out ALL the fields."
+            error: "OOPS! Please fill out ALL fields before clicking submit."
         });
     } else {
         db.hashPassword(req.body.password).then(function(hashedPassword) {
             db.userRegistration(req.body.first, req.body.last, req.body.email, hashedPassword).then(function(results) {
                 req.session.user = {
                     id: results.rows[0].id,
-                    first: req.body.first,
-                    last: req.body.last
                 };
                 res.redirect('/profile');
             });
@@ -95,22 +93,30 @@ app.post('/login', function(req, res) {
     if (!req.body.email || !req.body.password) {
         res.render("login", {
             layout: "loggedoutmain",
-            error: "Please fill out ALL the fields."
+            error: "OOPS! Invalid username or password. Please try again."
         });
     } else {
         db.userLogin(req.body.email).then(function(results) {
             if (results.rows[0]) {
                 db.checkPassword(req.body.password, results.rows[0].hash).then(function(doesMatch) {
                     if (doesMatch) {
-                        req.session.user = {
-                            id: results.rows[0].id,
-                            email: req.body.email
-                        };
-                        res.redirect('/petition');
+                        db.getUserInfo(results.rows[0].id).then(function(userInfo){
+                            req.session.user = {
+                                id: results.rows[0].id,
+                                email: userInfo.email,
+                                age: userInfo.age,
+                                city: userInfo.city,
+                                sigID: userInfo.sig_id,
+                                first: userInfo.first,
+                                last: userInfo.last,
+                                url: userInfo.url,
+                            };
+                            res.redirect('/petition');
+                        });
                     } else {
                         res.render("login", {
                             layout: "loggedoutmain",
-                            error: "Oops! Invalid password!"
+                            error: "OOPS! Invalid password!"
                         });
                     }
                 });
@@ -131,7 +137,7 @@ app.post("/petition", function(req, res) {
     if (!req.body.signature) {
         res.render("petition", {
             layout: "main",
-            error: "Please fill out ALL the fields."
+            error: "OOPS! Please fill out ALL fields before clicking submit."
         });
     } else {
         db.signPetition(req.body.signature).then(function(results) {
@@ -151,7 +157,6 @@ app.get("/thankyou", checkForLogin, checkForSigID, function(req, res) {
             layout: "main",
             signature: results[0],
             count: results[1],
-
         });
     });
 });
