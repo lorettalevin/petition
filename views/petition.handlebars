@@ -1,10 +1,15 @@
-<h2>Something about my petition</h2>
-
-<form action="/petition" method="post">
+<form class="petition-container" action="/petition" method="post">
     <input id="hidden" type="hidden" name="signature">
-    <button>Submit</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button class="submit">SUBMIT</button>
 </form>
 
-{{error}}
+<div class="logout-container">
+    <a href="/logout">Click here to logout</a>
+</div>
+
+<div class="error">
+    {{error}}
+</div>
 
 <canvas id="canvas" width="400" height="200"></canvas>

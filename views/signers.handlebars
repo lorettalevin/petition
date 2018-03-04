@@ -1,16 +1,18 @@
-<h2>List of people who also signed the petition:</h2>
-
 <div class="signers-container">
     {{#each signers}}
         {{#if this.url}}
             <p><a href="{{url}}">{{this.first}} {{this.last}}</a></p>
         {{else}}
             <p>{{this.first}} {{this.last}}</p>
-        {{/if}} ({{age}}
+        {{/if}} ({{age}},
         {{#if ../hideCity}})
         {{else}}
-            , <a href="/petition/signers/{{city}}">{{city}}</a>)
+             <a href="/petition/signers/{{city}}">{{city}}</a>)
         {{/if}}
         </p>
     {{/each}}
+</div>
+
+<div class="logout-container">
+    <a href="/logout">Click here to logout</a>
 </div>

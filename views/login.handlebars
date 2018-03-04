@@ -1,7 +1,10 @@
-<form class="login" action="/login" method="post">
+<form class="login-container" action="/login" method="post">
     <input type="text" name="email" placeholder="Email">
     <input type="password" name="password" placeholder="Password">
-    <button id="login-button" name="button">Submit</button>
+    <button class="button" name="button">SUBMIT</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
 </form>
-<br>
-<a href="/registration">Haven't registered yet? Click here to register!</a>
+
+<div class="registration-link">
+    <a href="/registration">Haven't registered yet? Click here to register!</a>
+</div>

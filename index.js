@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const db = require("./db");
+const csurf = require('csurf');
 const signPetition = db.signPetition;
 const getSigners = db.getSigners;
 const getSigURL = db.getSigURL;
@@ -41,6 +42,13 @@ app.use(cookieSession({
     secret: "a really hard to guess secret",
     maxAge: 1000 * 60 * 60 * 24 * 14
 }));
+
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 app.get("/registration", function(req, res) {
     res.render("registration", {layout: "main"});
@@ -88,15 +96,22 @@ app.post('/login', function(req, res) {
         });
     } else {
         userLogin(req.body.email).then(function(results) {
-            checkPassword(req.body.password, results.rows[0].hash).then(function(doesMatch) {
-                if (doesMatch) {
-                    req.session.user = {
-                        id: results.rows[0].id,
-                        email: req.body.email
-                    };
-                    res.redirect('/petition');
-                }
-            });
+            if (results.rows[0]) {
+                checkPassword(req.body.password, results.rows[0].hash).then(function(doesMatch) {
+                    if (doesMatch) {
+                        req.session.user = {
+                            id: results.rows[0].id,
+                            email: req.body.email
+                        };
+                        res.redirect('/petition');
+                    } else {
+                        res.render("/login", {
+                            layout: "main",
+                            error: "Oops! Invalid password!"
+                        });
+                    }
+                });
+            }
         });
     }
 });
@@ -146,7 +161,7 @@ app.get("/signers", checkForSigID, function(req, res) {
     });
 });
 
-app.get('/petition/signers/:city', function(req, res) {
+app.get('/petition/signers/:city', checkForSigID, function(req, res) {
     getSignersByCity(req.params.city).then(function(signers) {
         res.render("signers", {
             layout: "main",
@@ -202,9 +217,7 @@ app.post("/edit", function(req, res) {
         });
     } else {
         updateWithoutPasswordProfile(first, last, email, req.session.user.id).then(function() {
-            console.log("LOG #1");
             checkForRowInUserProfile(req.session.user.id).then(function(rowExists) {
-                console.log("LOG #2");
                 if (rowExists) {
                     updateUserProfile(age, city, homepage, req.session.user.id).then(function() {
                         res.redirect('/petition');
@@ -226,5 +239,9 @@ app.post("/delete", function(req, res) {
     });
 });
 
-app.listen(8080, () => console.log("Listening"));
-// app.listen(process.env.port || 8080, () => console.log("Listening"));
+app.get("/logout", function(req, res) {
+    req.session = null;
+    res.redirect("/login");
+});
+
+app.listen(process.env.port || 8080, () => console.log("Listening"));

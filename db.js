@@ -1,14 +1,19 @@
 const bcrypt = require('bcryptjs');
-var spicedPg = require("spiced-pg");
-var {
-    dbUser,
-    dbPass
-} = require("./secrets");
+const spicedPg = require("spiced-pg");
+let dbUrl;
 
-var db = spicedPg(`postgres:${dbUser}:${dbPass}@localhost:5432/signatures`);
-// var db = spicedPg(process.env.DATABASE_URL || `postgres:${dbUser}:${dbPass}@localhost:5432/signatures`);
 
-// var dbUrl = process.env.DATABASE_URL || 'postgres://spicedling:password@localhost:5432/petition';
+if (process.env.DATABASE_URL) {
+    dbUrl = process.env.DATABASE_URL;
+} else {
+    const {
+        dbUser,
+        dbPass
+    } = require("./secrets");
+    dbUrl = `postgres:${dbUser}:${dbPass}@localhost:5432/signatures`;
+}
+
+const db = spicedPg(dbUrl);
 
 function userRegistration(first, last, email, hash) {
     return new Promise(function(resolve, reject) {
@@ -37,7 +42,12 @@ function userLogin(email) {
 function userProfile(age, city, url, userID) {
     return new Promise(function(resolve, reject) {
         const q = "INSERT INTO user_profiles (age, city, url, user_id) VALUES ($1, $2, $3, $4) RETURNING id";
-        const params = [age, city, url, userID];
+        const params = [
+            age || null,
+            city || null,
+            url || null,
+            userID || null
+        ];
         db.query(q, params).then(function(results) {
             resolve(results);
         }).catch(function(err) {
@@ -182,7 +192,12 @@ function updateWithPasswordProfile(hash, id) {
 function insertProfile(userID, age, city, url) {
     return new Promise(function(resolve, reject) {
         const q = `INSERT INTO user_profiles (user_id, age, city, url) VALUES ($1, $2, $3, $4) RETURNING id`;
-        const params = [userID || null, age || null, city || null, url || null];
+        const params = [
+            userID || null,
+            age || null,
+            city || null,
+            url || null
+        ];
         db.query(q, params).then(function(results) {
             resolve(results.rows[0]);
         }).catch(function(err) {

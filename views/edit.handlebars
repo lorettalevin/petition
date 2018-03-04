@@ -6,5 +6,10 @@
     <input type="text" name="city" value="{{city}}" placeholder="City">
     <input type="text" name="homepage" value="{{url}}" placeholder="Homepage">
     <input type="password" name="password" placeholder="New Password">
-    <button name="button">UPDATE</button>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <button class="button" name="button">UPDATE</button>
 </form>
+
+<div class="logout-container">
+    <a href="/logout">Click here to logout</a>
+</div>

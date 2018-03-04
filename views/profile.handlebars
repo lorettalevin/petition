@@ -1,9 +1,24 @@
-<p>Tell us about yourself!</p>
-<br>
-<form class="profile-container" action="/profile" method="post">
-    <input type="text" name="age" placeholder="Age">
-    <input type="text" name="city" placeholder="City">
-    <input type="text" name="url" placeholder="Homepage">
-    <button name="button">CONTINUE</button>
-</form>
-<br>
+<div class="profile-section">
+    <h2>Tell us about yourself!</h2>
+
+    <div>    
+        <img id="profile-icon" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE9AFtu73XHYpmbJTHLz8ozrwpNyoL0sNU9pQtRyn8N-3vpi3wTg" alt="Profile Icon">
+    </div>
+
+    <form class="profile-container" action="/profile" method="post">
+        <input type="text" name="age" placeholder="Age">
+        <input type="text" name="city" placeholder="City">
+        <input type="text" name="url" placeholder="Homepage">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button class="continue-button" name="button">CONTINUE</button>
+    </form>
+
+    <div class="logout-container">
+        <a href="/logout">Click here to logout</a>
+    </div>
+</div>
+
+
+<div class="clickbait-cartoon">
+    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAahAAAAJDI4ODVjMmIxLThjOTgtNDE2Yy05NjM2LTAyN2ZjMTZjMjBiOQ.jpg" alt="Clickbait Cartoon">
+</div>

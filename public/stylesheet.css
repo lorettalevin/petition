@@ -1,10 +1,53 @@
+* {
+box-sizing: border-box;
+}
+
 body {
-    background-color: rgb(176, 72, 233);
+    background-color: rgb(3, 30, 76);
+    display: flex;
+    flex-direction: column;
 }
 
 p {
     font-size: 20px;
     color: rgb(67, 223, 167)
+}
+
+a {
+    color: blue;
+    font-size: 20px;
+    margin-left: 0px;
+}
+
+h2 {
+    color: rgb(2, 246, 218);
+    font-family: courier;
+    display: flex;
+    justify-content: space-between;
+}
+
+input {
+    width: 300px;
+    height: 35px;
+    background-color: lightgray;
+    font-size: 20px;
+}
+
+.button {
+    height: 35px;
+    border-radius: 5px;
+    background-color: #535c68;
+    font-size: 20px;
+    color: lightgray;
+}
+.continue-button {
+    height: 35px;
+    width: 125px;
+    border-radius: 5px;
+    background-color: #535c68;
+    font-size: 20px;
+    color: lightgray;
+    margin-top: 10px;
 }
 
 #canvas {
@@ -18,4 +61,46 @@ p {
     display: inline-block;
     width: 400px;
     height: 200px;
+}
+
+#profile-icon {
+    margin-bottom: 10px;
+
+}
+
+.clickbait-cartoon {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.clickbait-image {
+    height: 400px;
+    width: 100%;
+    background: blue url(http://s.marketwatch.com/public/resources/MWimages/MW-FC107_fake_ZG_20161215132556.jpg) no-repeat;
+     background-size: 100% 100%;
+}
+
+.registration-container {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.login-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.logout-container {
+    padding-top: 10px;
 }

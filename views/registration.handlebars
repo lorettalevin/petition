@@ -1,9 +1,35 @@
-<form class="registration-container" action="/registration" method="post">
-    <input type="text" name="first" placeholder="First Name">
-    <input type="text" name="last" placeholder="Last Name">
-    <input type="text" name="email" placeholder="Email">
-    <input type="password" name="password" placeholder="Password">
-    <button name="button">Submit</button>
-</form>
+<h2>Ever click on provocative internet headlines only to later find that you've been duped?
 <br>
-<a href="/login">Already have an account? Click here to go to user login</a>
+<br>
+"And then this amazing thing happens! Click here to find out what!" (And click, and click, and click click click click click... 10 clicks later and you realize it's actually not very amazing after all.
+<br>
+<br>
+If you're tired of misleading articles polluting your newsfeeds, sign this petition to END CLICK BAIT!
+<br>
+<br>
+Fill out the form below to register:
+</h2>
+
+<div class="registration-container">
+    <form action="/registration" method="post">
+        <input type="text" name="first" placeholder="First Name">
+        <input type="text" name="last" placeholder="Last Name">
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button class="button" name="button">SUBMIT</button>
+    </form>
+</div>
+
+
+<div class="login-container">
+    <a href="/login">Already have an account? Click here to go to user login!</a>
+</div>
+
+<div class="error">
+    {{error}}
+</div>
+
+<div class="clickbait-image">
+    <!-- <img src="http://s.marketwatch.com/public/resources/MWimages/MW-FC107_fake_ZG_20161215132556.jpg" alt="Click Bait Image"> -->
+</div>
