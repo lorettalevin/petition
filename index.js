@@ -244,4 +244,4 @@ app.get("/logout", function(req, res) {
     res.redirect("/login");
 });
 
-app.listen(process.env.port || 8080, () => console.log("Listening"));
+app.listen(process.env.PORT || 8080, () => console.log("Listening"));

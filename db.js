@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const spicedPg = require("spiced-pg");
 let dbUrl;
 
-
 if (process.env.DATABASE_URL) {
     dbUrl = process.env.DATABASE_URL;
 } else {
