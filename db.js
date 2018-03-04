@@ -150,7 +150,7 @@ function getSignersByCity(city) {
 
 function populateProfile(id) {
     return new Promise(function(resolve, reject) {
-        const q = `SELECT users.first, users.last, users.email, user_profiles.age, user_profiles.url
+        const q = `SELECT users.first, users.last, users.email, user_profiles.city, user_profiles.age, user_profiles.url
         FROM users
         JOIN user_profiles
         ON users.id = user_profiles.user_id
