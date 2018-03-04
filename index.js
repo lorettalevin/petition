@@ -33,6 +33,22 @@ const checkForSigID = function(req, res, next) {
     }
 };
 
+const checkForLogin = function(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+};
+
+const checkForLogout = function(req, res, next) {
+    if (req.session.user) {
+        return res.redirect("/petition");
+    } else {
+        next();
+    }
+};
+
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 app.use(cookieParser());
@@ -54,7 +70,7 @@ app.get('/', function(req, res) {
     res.redirect("/registration");
 });
 
-app.get("/registration", function(req, res) {
+app.get("/registration", checkForLogout, function(req, res) {
     res.render("registration", {layout: "main"});
 });
 
@@ -78,7 +94,7 @@ app.post("/registration", function(req, res) {
     }
 });
 
-app.get("/profile", function(req, res) {
+app.get("/profile", checkForLogin, function(req, res) {
     res.render("profile", {layout: "main"});
 });
 
@@ -88,7 +104,7 @@ app.post("/profile", function(req, res) {
     });
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", checkForLogout, function(req, res) {
     res.render("login", {layout: "main"});
 });
 
@@ -120,7 +136,7 @@ app.post('/login', function(req, res) {
     }
 });
 
-app.get("/petition", function(req, res) {
+app.get("/petition", checkForLogin, function(req, res) {
     if (req.session.user.sigID) {
         res.redirect("/thankyou");
     } else {
@@ -143,7 +159,7 @@ app.post("/petition", function(req, res) {
     }
 });
 
-app.get("/thankyou", checkForSigID, function(req, res) {
+app.get("/thankyou", checkForLogin, checkForSigID, function(req, res) {
     Promise.all([
         getSigURL(req.session.user.sigID),
         getSigCount()
@@ -151,12 +167,13 @@ app.get("/thankyou", checkForSigID, function(req, res) {
         res.render("thankyou", {
             layout: "main",
             signature: results[0],
-            count: results[1]
+            count: results[1],
+
         });
     });
 });
 
-app.get("/signers", checkForSigID, function(req, res) {
+app.get("/signers", checkForLogin, checkForSigID, function(req, res) {
     getSigners().then(function(signers) {
         res.render("signers", {
             layout: "main",
@@ -165,7 +182,7 @@ app.get("/signers", checkForSigID, function(req, res) {
     });
 });
 
-app.get('/petition/signers/:city', checkForSigID, function(req, res) {
+app.get('/petition/signers/:city', checkForLogin, checkForSigID, function(req, res) {
     getSignersByCity(req.params.city).then(function(signers) {
         res.render("signers", {
             layout: "main",
@@ -175,7 +192,7 @@ app.get('/petition/signers/:city', checkForSigID, function(req, res) {
     });
 });
 
-app.get('/edit', function(req, res) {
+app.get('/edit', checkForLogin, function(req, res) {
     checkForRowInUserProfile(req.session.user.id).then(function(rowExists) {
         if (rowExists) {
             populateProfile(req.session.user.id).then(function(results) {
