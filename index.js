@@ -50,6 +50,10 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.get('/', function(req, res) {
+    res.redirect("/registration");
+});
+
 app.get("/registration", function(req, res) {
     res.render("registration", {layout: "main"});
 });
