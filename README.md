@@ -4,9 +4,11 @@ Landing page:
 
 <img src="public/petition-homepagepic.png">
 
+
 Adding/editing your account profile:
 
 <img src="public/petition-editprofile.gif">
+
 
 Virtual signature:
 
